@@ -109,6 +109,16 @@ namespace Pulumi.Kubernetes
             set => _enableServerSideApply.Set(value);
         }
 
+        private static readonly __Value<bool?> _forceClientSideDiff = new __Value<bool?>(() => __config.GetBoolean("forceClientSideDiff"));
+        /// <summary>
+        /// BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+        /// </summary>
+        public static bool? ForceClientSideDiff
+        {
+            get => _forceClientSideDiff.Get();
+            set => _forceClientSideDiff.Set(value);
+        }
+
         private static readonly __Value<string?> _kubeconfig = new __Value<string?>(() => __config.Get("kubeconfig"));
         /// <summary>
         /// The contents of a kubeconfig file or the path to a kubeconfig file. If this is set, this config will be used instead of $KUBECONFIG.

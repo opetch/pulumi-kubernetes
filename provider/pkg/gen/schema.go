@@ -81,6 +81,10 @@ func PulumiSchema(swagger map[string]interface{}) pschema.PackageSpec {
 					Description: "BETA FEATURE - If present and set to true, enable Server-Side Apply mode.\nSee https://github.com/pulumi/pulumi-kubernetes/issues/2011 for additional details.\nThis feature is in developer preview, and is disabled by default.",
 					TypeSpec:    pschema.TypeSpec{Type: "boolean"},
 				},
+				"forceClientSideDiff": {
+					Description: "BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.",
+					TypeSpec:    pschema.TypeSpec{Type: "boolean"},
+				},
 				"enableReplaceCRD": {
 					Description:        "Obsolete. This option has no effect.",
 					TypeSpec:           pschema.TypeSpec{Type: "boolean"},
@@ -158,6 +162,15 @@ func PulumiSchema(swagger map[string]interface{}) pschema.PackageSpec {
 						},
 					},
 					Description: "BETA FEATURE - If present and set to true, enable Server-Side Apply mode.\nSee https://github.com/pulumi/pulumi-kubernetes/issues/2011 for additional details.\nThis feature is in developer preview, and is disabled by default.",
+					TypeSpec:    pschema.TypeSpec{Type: "boolean"},
+				},
+				"forceClientSideDiff": {
+					DefaultInfo: &pschema.DefaultSpec{
+						Environment: []string{
+							"PULUMI_FORCE_CLIENT_SIDE_DIFF",
+						},
+					},
+					Description: "BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.",
 					TypeSpec:    pschema.TypeSpec{Type: "boolean"},
 				},
 				"enableReplaceCRD": {

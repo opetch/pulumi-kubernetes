@@ -22,6 +22,7 @@ class ProviderArgs:
                  enable_dry_run: Optional[pulumi.Input[bool]] = None,
                  enable_replace_crd: Optional[pulumi.Input[bool]] = None,
                  enable_server_side_apply: Optional[pulumi.Input[bool]] = None,
+                 force_client_side_diff: Optional[pulumi.Input[bool]] = None,
                  helm_release_settings: Optional[pulumi.Input['HelmReleaseSettingsArgs']] = None,
                  kube_client_settings: Optional[pulumi.Input['KubeClientSettingsArgs']] = None,
                  kubeconfig: Optional[pulumi.Input[str]] = None,
@@ -45,6 +46,7 @@ class ProviderArgs:
         :param pulumi.Input[bool] enable_server_side_apply: BETA FEATURE - If present and set to true, enable Server-Side Apply mode.
                See https://github.com/pulumi/pulumi-kubernetes/issues/2011 for additional details.
                This feature is in developer preview, and is disabled by default.
+        :param pulumi.Input[bool] force_client_side_diff: BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
         :param pulumi.Input['HelmReleaseSettingsArgs'] helm_release_settings: Options to configure the Helm Release resource.
         :param pulumi.Input['KubeClientSettingsArgs'] kube_client_settings: Options for tuning the Kubernetes client used by a Provider.
         :param pulumi.Input[str] kubeconfig: The contents of a kubeconfig file or the path to a kubeconfig file.
@@ -93,6 +95,10 @@ class ProviderArgs:
             enable_server_side_apply = _utilities.get_env_bool('PULUMI_K8S_ENABLE_SERVER_SIDE_APPLY')
         if enable_server_side_apply is not None:
             pulumi.set(__self__, "enable_server_side_apply", enable_server_side_apply)
+        if force_client_side_diff is None:
+            force_client_side_diff = _utilities.get_env_bool('PULUMI_FORCE_CLIENT_SIDE_DIFF')
+        if force_client_side_diff is not None:
+            pulumi.set(__self__, "force_client_side_diff", force_client_side_diff)
         if helm_release_settings is not None:
             pulumi.set(__self__, "helm_release_settings", helm_release_settings)
         if kube_client_settings is not None:
@@ -206,6 +212,18 @@ class ProviderArgs:
         pulumi.set(self, "enable_server_side_apply", value)
 
     @property
+    @pulumi.getter(name="forceClientSideDiff")
+    def force_client_side_diff(self) -> Optional[pulumi.Input[bool]]:
+        """
+        BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+        """
+        return pulumi.get(self, "force_client_side_diff")
+
+    @force_client_side_diff.setter
+    def force_client_side_diff(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "force_client_side_diff", value)
+
+    @property
     @pulumi.getter(name="helmReleaseSettings")
     def helm_release_settings(self) -> Optional[pulumi.Input['HelmReleaseSettingsArgs']]:
         """
@@ -314,6 +332,7 @@ class Provider(pulumi.ProviderResource):
                  enable_dry_run: Optional[pulumi.Input[bool]] = None,
                  enable_replace_crd: Optional[pulumi.Input[bool]] = None,
                  enable_server_side_apply: Optional[pulumi.Input[bool]] = None,
+                 force_client_side_diff: Optional[pulumi.Input[bool]] = None,
                  helm_release_settings: Optional[pulumi.Input[pulumi.InputType['HelmReleaseSettingsArgs']]] = None,
                  kube_client_settings: Optional[pulumi.Input[pulumi.InputType['KubeClientSettingsArgs']]] = None,
                  kubeconfig: Optional[pulumi.Input[str]] = None,
@@ -341,6 +360,7 @@ class Provider(pulumi.ProviderResource):
         :param pulumi.Input[bool] enable_server_side_apply: BETA FEATURE - If present and set to true, enable Server-Side Apply mode.
                See https://github.com/pulumi/pulumi-kubernetes/issues/2011 for additional details.
                This feature is in developer preview, and is disabled by default.
+        :param pulumi.Input[bool] force_client_side_diff: BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
         :param pulumi.Input[pulumi.InputType['HelmReleaseSettingsArgs']] helm_release_settings: Options to configure the Helm Release resource.
         :param pulumi.Input[pulumi.InputType['KubeClientSettingsArgs']] kube_client_settings: Options for tuning the Kubernetes client used by a Provider.
         :param pulumi.Input[str] kubeconfig: The contents of a kubeconfig file or the path to a kubeconfig file.
@@ -392,6 +412,7 @@ class Provider(pulumi.ProviderResource):
                  enable_dry_run: Optional[pulumi.Input[bool]] = None,
                  enable_replace_crd: Optional[pulumi.Input[bool]] = None,
                  enable_server_side_apply: Optional[pulumi.Input[bool]] = None,
+                 force_client_side_diff: Optional[pulumi.Input[bool]] = None,
                  helm_release_settings: Optional[pulumi.Input[pulumi.InputType['HelmReleaseSettingsArgs']]] = None,
                  kube_client_settings: Optional[pulumi.Input[pulumi.InputType['KubeClientSettingsArgs']]] = None,
                  kubeconfig: Optional[pulumi.Input[str]] = None,
@@ -429,6 +450,9 @@ class Provider(pulumi.ProviderResource):
             if enable_server_side_apply is None:
                 enable_server_side_apply = _utilities.get_env_bool('PULUMI_K8S_ENABLE_SERVER_SIDE_APPLY')
             __props__.__dict__["enable_server_side_apply"] = pulumi.Output.from_input(enable_server_side_apply).apply(pulumi.runtime.to_json) if enable_server_side_apply is not None else None
+            if force_client_side_diff is None:
+                force_client_side_diff = _utilities.get_env_bool('PULUMI_FORCE_CLIENT_SIDE_DIFF')
+            __props__.__dict__["force_client_side_diff"] = pulumi.Output.from_input(force_client_side_diff).apply(pulumi.runtime.to_json) if force_client_side_diff is not None else None
             __props__.__dict__["helm_release_settings"] = pulumi.Output.from_input(helm_release_settings).apply(pulumi.runtime.to_json) if helm_release_settings is not None else None
             __props__.__dict__["kube_client_settings"] = pulumi.Output.from_input(kube_client_settings).apply(pulumi.runtime.to_json) if kube_client_settings is not None else None
             if kubeconfig is None:

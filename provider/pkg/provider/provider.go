@@ -134,6 +134,7 @@ type kubeProvider struct {
 	suppressDeprecationWarnings bool
 	suppressHelmHookWarnings    bool
 	serverSideApplyMode         bool
+	clientSideDiffMode          bool
 
 	helmDriver               string
 	helmPluginsPath          string
@@ -459,6 +460,22 @@ func (k *kubeProvider) Configure(_ context.Context, req *pulumirpc.ConfigureRequ
 		k.enableDryRun = true
 		k.serverSideApplyMode = true
 	}
+
+	forceClientSideDiff := func() bool {
+    	// If the provider flag is set, use that value to determine behavior. This will override the ENV var.
+    	if enabled, exists := vars["kubernetes:config:forceClientSideDiff"]; exists {
+    			return enabled == trueStr
+    		}
+    	// If the provider flag is not set, fall back to the ENV var.
+    	if enabled, exists := os.LookupEnv("PULUMI_K8S_FORCE_CLIENT_SIDE_DIFF"); exists {
+    			return enabled == trueStr
+    		}
+    	// Default to true.
+    	return true
+    }
+    if forceClientSideDiff() {
+    	k.clientSideDiffMode = true
+    }
 
 	enableConfigMapMutable := func() bool {
 		// If the provider flag is set, use that value to determine behavior. This will override the ENV var.
@@ -2766,6 +2783,9 @@ func (k *kubeProvider) tryServerSidePatch(
 	gvk schema.GroupVersionKind,
 	fieldManager string,
 ) (ssPatch []byte, ssPatchBase map[string]interface{}, ok bool, err error) {
+	if k.clientSideDiffMode {
+		return nil, nil, false, nil
+	}
 	// If the resource's GVK changed, so compute patch using inputs.
 	if oldInputs.GroupVersionKind().String() != gvk.String() {
 		return nil, nil, false, nil

@@ -155,6 +155,21 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
+     * BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+     * 
+     */
+    @Import(name="forceClientSideDiff", json=true)
+    private @Nullable Output<Boolean> forceClientSideDiff;
+
+    /**
+     * @return BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+     * 
+     */
+    public Optional<Output<Boolean>> forceClientSideDiff() {
+        return Optional.ofNullable(this.forceClientSideDiff);
+    }
+
+    /**
      * Options to configure the Helm Release resource.
      * 
      */
@@ -293,6 +308,7 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
         this.enableDryRun = $.enableDryRun;
         this.enableReplaceCRD = $.enableReplaceCRD;
         this.enableServerSideApply = $.enableServerSideApply;
+        this.forceClientSideDiff = $.forceClientSideDiff;
         this.helmReleaseSettings = $.helmReleaseSettings;
         this.kubeClientSettings = $.kubeClientSettings;
         this.kubeconfig = $.kubeconfig;
@@ -498,6 +514,27 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
+         * @param forceClientSideDiff BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder forceClientSideDiff(@Nullable Output<Boolean> forceClientSideDiff) {
+            $.forceClientSideDiff = forceClientSideDiff;
+            return this;
+        }
+
+        /**
+         * @param forceClientSideDiff BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder forceClientSideDiff(Boolean forceClientSideDiff) {
+            return forceClientSideDiff(Output.of(forceClientSideDiff));
+        }
+
+        /**
          * @param helmReleaseSettings Options to configure the Helm Release resource.
          * 
          * @return builder
@@ -673,6 +710,7 @@ public final class ProviderArgs extends com.pulumi.resources.ResourceArgs {
             $.enableDryRun = Codegen.booleanProp("enableDryRun").output().arg($.enableDryRun).env("PULUMI_K8S_ENABLE_DRY_RUN").getNullable();
             $.enableReplaceCRD = Codegen.booleanProp("enableReplaceCRD").output().arg($.enableReplaceCRD).env("PULUMI_K8S_ENABLE_REPLACE_CRD").getNullable();
             $.enableServerSideApply = Codegen.booleanProp("enableServerSideApply").output().arg($.enableServerSideApply).env("PULUMI_K8S_ENABLE_SERVER_SIDE_APPLY").getNullable();
+            $.forceClientSideDiff = Codegen.booleanProp("forceClientSideDiff").output().arg($.forceClientSideDiff).env("PULUMI_FORCE_CLIENT_SIDE_DIFF").getNullable();
             $.kubeconfig = Codegen.stringProp("kubeconfig").output().arg($.kubeconfig).env("KUBECONFIG").getNullable();
             $.suppressDeprecationWarnings = Codegen.booleanProp("suppressDeprecationWarnings").output().arg($.suppressDeprecationWarnings).env("PULUMI_K8S_SUPPRESS_DEPRECATION_WARNINGS").getNullable();
             $.suppressHelmHookWarnings = Codegen.booleanProp("suppressHelmHookWarnings").output().arg($.suppressHelmHookWarnings).env("PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS").getNullable();

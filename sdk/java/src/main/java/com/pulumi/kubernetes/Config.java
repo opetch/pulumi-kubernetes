@@ -68,6 +68,13 @@ public final class Config {
         return Codegen.booleanProp("enableServerSideApply").config(config).get();
     }
 /**
+ * BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+ * 
+ */
+    public Optional<Boolean> forceClientSideDiff() {
+        return Codegen.booleanProp("forceClientSideDiff").config(config).get();
+    }
+/**
  * The contents of a kubeconfig file or the path to a kubeconfig file. If this is set, this config will be used instead of $KUBECONFIG.
  * 
  */

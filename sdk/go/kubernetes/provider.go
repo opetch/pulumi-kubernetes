@@ -34,6 +34,9 @@ func NewProvider(ctx *pulumi.Context,
 	if args.EnableServerSideApply == nil {
 		args.EnableServerSideApply = pulumi.BoolPtr(getEnvOrDefault(false, parseEnvBool, "PULUMI_K8S_ENABLE_SERVER_SIDE_APPLY").(bool))
 	}
+	if args.ForceClientSideDiff == nil {
+		args.ForceClientSideDiff = pulumi.BoolPtr(getEnvOrDefault(false, parseEnvBool, "PULUMI_FORCE_CLIENT_SIDE_DIFF").(bool))
+	}
 	if args.HelmReleaseSettings != nil {
 		args.HelmReleaseSettings = args.HelmReleaseSettings.ToHelmReleaseSettingsPtrOutput().ApplyT(func(v *HelmReleaseSettings) *HelmReleaseSettings { return v.Defaults() }).(HelmReleaseSettingsPtrOutput)
 	}
@@ -83,6 +86,8 @@ type providerArgs struct {
 	// See https://github.com/pulumi/pulumi-kubernetes/issues/2011 for additional details.
 	// This feature is in developer preview, and is disabled by default.
 	EnableServerSideApply *bool `pulumi:"enableServerSideApply"`
+	// BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+	ForceClientSideDiff *bool `pulumi:"forceClientSideDiff"`
 	// Options to configure the Helm Release resource.
 	HelmReleaseSettings *HelmReleaseSettings `pulumi:"helmReleaseSettings"`
 	// Options for tuning the Kubernetes client used by a Provider.
@@ -138,6 +143,8 @@ type ProviderArgs struct {
 	// See https://github.com/pulumi/pulumi-kubernetes/issues/2011 for additional details.
 	// This feature is in developer preview, and is disabled by default.
 	EnableServerSideApply pulumi.BoolPtrInput
+	// BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+	ForceClientSideDiff pulumi.BoolPtrInput
 	// Options to configure the Helm Release resource.
 	HelmReleaseSettings HelmReleaseSettingsPtrInput
 	// Options for tuning the Kubernetes client used by a Provider.

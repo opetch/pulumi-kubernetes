@@ -96,6 +96,12 @@ namespace Pulumi.Kubernetes
         public Input<bool>? EnableServerSideApply { get; set; }
 
         /// <summary>
+        /// BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+        /// </summary>
+        [Input("forceClientSideDiff", json: true)]
+        public Input<bool>? ForceClientSideDiff { get; set; }
+
+        /// <summary>
         /// Options to configure the Helm Release resource.
         /// </summary>
         [Input("helmReleaseSettings", json: true)]
@@ -155,6 +161,7 @@ namespace Pulumi.Kubernetes
             EnableDryRun = Utilities.GetEnvBoolean("PULUMI_K8S_ENABLE_DRY_RUN");
             EnableReplaceCRD = Utilities.GetEnvBoolean("PULUMI_K8S_ENABLE_REPLACE_CRD");
             EnableServerSideApply = Utilities.GetEnvBoolean("PULUMI_K8S_ENABLE_SERVER_SIDE_APPLY");
+            ForceClientSideDiff = Utilities.GetEnvBoolean("PULUMI_FORCE_CLIENT_SIDE_DIFF");
             KubeConfig = Utilities.GetEnv("KUBECONFIG");
             SuppressDeprecationWarnings = Utilities.GetEnvBoolean("PULUMI_K8S_SUPPRESS_DEPRECATION_WARNINGS");
             SuppressHelmHookWarnings = Utilities.GetEnvBoolean("PULUMI_K8S_SUPPRESS_HELM_HOOK_WARNINGS");

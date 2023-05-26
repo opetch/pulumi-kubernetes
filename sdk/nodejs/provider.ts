@@ -44,6 +44,7 @@ export class Provider extends pulumi.ProviderResource {
             resourceInputs["enableDryRun"] = pulumi.output((args ? args.enableDryRun : undefined) ?? utilities.getEnvBoolean("PULUMI_K8S_ENABLE_DRY_RUN")).apply(JSON.stringify);
             resourceInputs["enableReplaceCRD"] = pulumi.output((args ? args.enableReplaceCRD : undefined) ?? utilities.getEnvBoolean("PULUMI_K8S_ENABLE_REPLACE_CRD")).apply(JSON.stringify);
             resourceInputs["enableServerSideApply"] = pulumi.output((args ? args.enableServerSideApply : undefined) ?? utilities.getEnvBoolean("PULUMI_K8S_ENABLE_SERVER_SIDE_APPLY")).apply(JSON.stringify);
+            resourceInputs["forceClientSideDiff"] = pulumi.output((args ? args.forceClientSideDiff : undefined) ?? utilities.getEnvBoolean("PULUMI_FORCE_CLIENT_SIDE_DIFF")).apply(JSON.stringify);
             resourceInputs["helmReleaseSettings"] = pulumi.output(args ? (args.helmReleaseSettings ? pulumi.output(args.helmReleaseSettings).apply(inputs.helmReleaseSettingsProvideDefaults) : undefined) : undefined).apply(JSON.stringify);
             resourceInputs["kubeClientSettings"] = pulumi.output(args ? (args.kubeClientSettings ? pulumi.output(args.kubeClientSettings).apply(inputs.kubeClientSettingsProvideDefaults) : undefined) : undefined).apply(JSON.stringify);
             resourceInputs["kubeconfig"] = (args ? args.kubeconfig : undefined) ?? utilities.getEnv("KUBECONFIG");
@@ -100,6 +101,10 @@ export interface ProviderArgs {
      * This feature is in developer preview, and is disabled by default.
      */
     enableServerSideApply?: pulumi.Input<boolean>;
+    /**
+     * BETA FEATURE - If present and set to true while server side apply is also set, client side diffing will be used rather than server-side to speed up previews.
+     */
+    forceClientSideDiff?: pulumi.Input<boolean>;
     /**
      * Options to configure the Helm Release resource.
      */
